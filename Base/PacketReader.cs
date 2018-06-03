@@ -19,12 +19,31 @@ namespace Base
             using (var reader = new BinaryReader(stream))
                 while (true)
                 {
-                    var buffer = reader.ReadBytes(2);
-                    var size = BitConverter.ToUInt16(buffer, 0);
+                    var tag = reader.ReadTag();
+                    switch (tag)
+                    {
+                        case Tag.Client:
+                            var pckClient = reader.ReadPacket();
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine(Utils.ToHexStr(pckClient));
+                            break;
 
-                    buffer = reader.ReadBytes(size - 2);
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine($"{nameof(PacketReader)}: {Utils.ToHexStr(buffer)}");
+                        case Tag.Server:
+                            var pckServer = reader.ReadPacket();
+                            Console.ForegroundColor = ConsoleColor.DarkCyan;
+                            Console.WriteLine(Utils.ToHexStr(pckServer));
+                            break;
+
+                        case Tag.Debug:
+                            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                            Console.WriteLine("Debug message");
+                            break;
+
+                        default:
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            Console.WriteLine("Unknown message");
+                            break;
+                    }
                 }
         }
     }

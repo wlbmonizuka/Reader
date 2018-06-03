@@ -20,20 +20,47 @@ namespace Base
                 while (true)
                 {
                     //По нажатию клавиши в консоли инжектим пакет
-                    Console.ReadKey();
-                    var buffer = new byte[]
+                    var key = Console.ReadKey(true).Key;
+                    switch (key)
                     {
-                        0x0b, 0x00,      //размер    -   11 Байт, надеюсь не перепутал порядок байтов) поправишь
-                        0x38,
-                        0x31, 0x00, 0x00, 0x00,
-                        0x00, 0x00, 0x00, 0x00
-                    };
+                        case ConsoleKey.D0:
+                        case ConsoleKey.NumPad0:
+                            var bufferClient = new byte[] {
+                                0x38,
+                                0x31, 0x00, 0x00, 0x00,
+                                0x00, 0x00, 0x00, 0x00
+                            };
 
-                    writer.Write(buffer);
-                    //writer.Flush();     //это чтобы собранный пакет ушел в сеть
+                            writer.WriteTag(Tag.Client);
+                            writer.WritePacket(bufferClient);
 
-                    Console.ForegroundColor = ConsoleColor.DarkCyan;
-                    Console.WriteLine($"{nameof(PacketWriter)}: {Utils.ToHexStr(buffer)}");
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine(Utils.ToHexStr(bufferClient));
+                            break;
+
+                        case ConsoleKey.D1:
+                        case ConsoleKey.NumPad1:
+                            var bufferServer = new byte[] {
+                                0x38,
+                                0x31, 0x00, 0x00, 0x00,
+                                0x00, 0x00, 0x00, 0x00
+                            };
+
+                            writer.WriteTag(Tag.Server);
+                            writer.WritePacket(bufferServer);
+
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.WriteLine(Utils.ToHexStr(bufferServer));
+                            break;
+
+                        case ConsoleKey.D2:
+                        case ConsoleKey.NumPad2:
+                            writer.WriteTag(Tag.Debug);
+
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.WriteLine($"{nameof(Tag)}.{Tag.Debug}");
+                            break;
+                    }
                 }
         }
     }
