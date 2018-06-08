@@ -16,7 +16,7 @@ namespace Server
             while (true)
             {
                 var socket = listener.AcceptSocket();
-                SocketWorker.StartNew(socket);
+                SocketWorker.StartNew(socket, true);
             }
         }
     }

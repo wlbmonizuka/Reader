@@ -1,50 +1,44 @@
 ﻿using System;
 using System.IO;
-using System.Net.Sockets;
 
 namespace Base
 {
     public class PacketReader
     {
-        Socket socket;
-        public PacketReader(Socket socket) =>
-            this.socket = socket;
+        BinaryReader reader;
+        public PacketReader(BinaryReader reader) =>
+            this.reader = reader;
 
-        public static void StartNew(Socket socket) =>
-            new PacketReader(socket).Start();
+        public event Action<Tag, byte[]> OnRead;
 
         public void Start()
         {
-            using (var stream = new NetworkStream(socket))
-            using (var reader = new BinaryReader(stream))
-                while (true)
+            while (true)
+            {
+                var tag = reader.ReadTag();
+                switch (tag)
                 {
-                    var tag = reader.ReadTag();
-                    switch (tag)
-                    {
-                        case Tag.Client:
-                            var pckClient = reader.ReadPacket();
-                            Console.ForegroundColor = ConsoleColor.DarkYellow;
-                            Console.WriteLine(Utils.ToHexStr(pckClient));
-                            break;
+                    case Tag.Client:
+                        var pckClient = reader.ReadPacket();
+                        Utils.Log(ConsoleColor.DarkYellow, Utils.ToHexStr(pckClient));
+                        OnRead?.Invoke(tag, pckClient);
+                        break;
 
-                        case Tag.Server:
-                            var pckServer = reader.ReadPacket();
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
-                            Console.WriteLine(Utils.ToHexStr(pckServer));
-                            break;
+                    case Tag.Server:
+                        var pckServer = reader.ReadPacket();
+                        Utils.Log(ConsoleColor.DarkCyan, Utils.ToHexStr(pckServer));
+                        OnRead?.Invoke(tag, pckServer);
+                        break;
 
-                        case Tag.Debug:
-                            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                            Console.WriteLine("Debug message");
-                            break;
+                    case Tag.Debug:
+                        Utils.Log(ConsoleColor.DarkMagenta, "Debug message");
+                        break;
 
-                        default:
-                            Console.ForegroundColor = ConsoleColor.DarkRed;
-                            Console.WriteLine("Unknown message");
-                            break;
-                    }
+                    default:
+                        Utils.Log(ConsoleColor.DarkRed, "Unknown message");
+                        break;
                 }
+            }
         }
     }
 }

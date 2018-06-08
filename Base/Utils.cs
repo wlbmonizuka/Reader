@@ -38,5 +38,15 @@ namespace Base
 
             return sb.ToString(0, sb.Length - strSeparator.Length);
         }
+
+        static object lockObj = new object();
+        public static void Log(ConsoleColor color, string msg)
+        {
+            lock (lockObj)
+            {
+                Console.ForegroundColor = color;
+                Console.WriteLine(msg);
+            }
+        }
     }
 }
