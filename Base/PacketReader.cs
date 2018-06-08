@@ -31,7 +31,9 @@ namespace Base
                         break;
 
                     case Tag.Debug:
-                        Utils.Log(ConsoleColor.DarkMagenta, "Debug message");
+                        var pckDebug = reader.ReadPacket();
+                        var s = System.Text.Encoding.ASCII.GetString(pckDebug);                        
+                        Utils.Log(ConsoleColor.DarkMagenta, s);
                         break;
 
                     default:

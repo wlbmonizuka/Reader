@@ -44,6 +44,8 @@ namespace Base
         {
             lock (lockObj)
             {
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("--");
                 Console.ForegroundColor = color;
                 Console.WriteLine(msg);
             }
