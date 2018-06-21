@@ -20,9 +20,8 @@ namespace Base
                     case ConsoleKey.D0:
                     case ConsoleKey.NumPad0:
                         var bufferClient0 = new byte[] {
-                                0x38,
-                                0x31, 0x00, 0x00, 0x00,
-                                0x00, 0x00, 0x00, 0x00
+                                0x1b,
+                                0x0c, 0x00, 0x00, 0x00
                             };
 
                         writer.WriteTag(Tag.Client);
@@ -47,16 +46,16 @@ namespace Base
 
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
-                        var bufferServer2 = new byte[] {
-                                0x38,
-                                0x31, 0x00, 0x00, 0x00,
-                                0x00, 0x00, 0x00, 0x00
+                        var bufferServer = new byte[] {
+                                0x4A, 0x00, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x73, 0x00, 0x2E, 0x00, 0x6C,
+                                0x00, 0x69, 0x00, 0x6E, 0x00, 0x32, 0x00, 0x63, 0x00, 0x2E, 0x00, 0x72, 0x00, 0x75, 0x00, 0x00,
+                                0x00
                             };
 
                         writer.WriteTag(Tag.Server);
-                        writer.WritePacket(bufferServer2);
+                        writer.WritePacket(bufferServer);
 
-                        Utils.Log(ConsoleColor.Cyan, Utils.ToHexStr(bufferServer2));
+                        Utils.Log(ConsoleColor.Cyan, Utils.ToHexStr(bufferServer));
                         break;
 
                     case ConsoleKey.D3:
